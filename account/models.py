@@ -29,7 +29,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-
 class Membership(models.Model):
     membership_name=models.CharField(max_length=225)
     first_time_charge=models.IntegerField()
@@ -48,8 +47,13 @@ class Member(models.Model):
     last_name=models.CharField(max_length=225)
     email=models.EmailField()
     contact=models.CharField(max_length=225)
+    
     old_member=models.BooleanField()
     member_id=models.CharField(max_length=225)
+    is_verified = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
+    enrolled_membership=models.ForeignKey(Membership, on_delete=models.CASCADE, related_name="member")
+
     
 class Event(models.Model):
     event_name=models.CharField(max_length=225)
@@ -59,9 +63,22 @@ class Event(models.Model):
     image=models.ImageField()
     short_description=HTMLField()
     long_description=HTMLField()
+    allow_registration = models.BooleanField()
+
+class TicketType(models.Model):
+    class currency_type(models.TextChoices):
+        USD="USD"
+        NPR="Nepalese Rupees"
+    
+    ticket_name=models.CharField(max_length=225)
+    currency=models.CharField(max_length=225,choices=currency_type.choices, default=currency_type.NPR)
+    ticket_price=models.IntegerField()
+    ticket_description=models.CharField(max_length=225)
+    registration_limit=models.IntegerField()
+    event=models.ForeignKey(Event, on_delete=models.CASCADE, related_name="ticket_type")
 
 class Registration(models.Model):
     allow_registration=models.BooleanField()
     available_from=models.DateTimeField()
     available_to=models.DateTimeField()
-    Event=models.ForeignKey(Event, on_delete=models.CASCADE)
+    event=models.ForeignKey(Event, on_delete=models.CASCADE, related_name="registration")
