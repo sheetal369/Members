@@ -3,11 +3,8 @@ import random
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
-
-
 from .emails import send_otp_via_email
 from .forms import LoginForm, CustomUserCreationForm
-
 
 def register_user(request):
     if request.method == 'POST':

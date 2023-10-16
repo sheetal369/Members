@@ -6,6 +6,7 @@ from tinymce.models import HTMLField
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    username = models.CharField(max_length=125)
     email = models.EmailField(unique=True)
     is_email_verified=models.BooleanField(default=True)
     otp=models.CharField(max_length=200,null=True,blank=True)
